@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Measurements</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quantico&display=swap');
+
+:root {
+    --green: #A3CD99;
+    --darkgreen: #579E81;
+}
+
+body {
+    background-color: #D4E8D6;
+}
+h1{
+    font-family: 'Quantico', sans-serif;
+    font-size: 64px;
+    color:#0f3923 ;
+}
+h2{
+    font-family: 'Quantico', sans-serif;
+    font-size: 36px;
+    color:#0f3923 ;
+}
+#pred{
+    font-family: 'Quantico', sans-serif;
+    font-size: 24px;
+    color:#0f3923 ;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.form-container {
+    width: 50%;
+    margin-bottom: 20px;
+}
+
+.form-table {
+    display: table;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.form-row {
+    display: table-row;
+}
+
+.labs {
+    display: table-cell;
+    padding: 2px;
+    width: 35%;
+    font-family: 'Quantico', sans-serif;
+    font-size: 18px;
+    color:#0f3923 ;
+}
+
+button[type="submit"] {
+    margin: 0 auto;
+    display: block;
+    padding: 10px;
+    width: 20%;
+    background-color: #579E81;
+    font-family: 'Quantico', sans-serif;
+    border: 2px solid #92B98F;
+    border-radius: 15px;
+    font-size: 20px;
+    color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #ffffff;
+    color: #579E81;
+    border-color: #579E81; 
+}
+.slider {
+    width: 100%;
+    margin: 10px auto;
+}
+
+input[type="range"] {
+    -webkit-appearance: none !important;
+    width: 100%;
+    height: 15px;
+    background-color: var(--green);
+    border: 1px solid #92B98F;
+    border-radius: 10px;
+    margin: auto;
+    transition: background-color 0.3s ease;
+}
+
+input[type="range"]:hover {
+    background-color: rgba(163, 205, 153, 0.95);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    width: 20px;
+    height: 20px;
+    background-color: #579E81;
+    border-radius: 30px;
+    box-shadow: 0px 0px 3px rgba(87, 158, 129, 0.85);
+    transition: all 0.5s ease;
+  }
+  
+  input[type="range"]:hover::-webkit-slider-thumb {
+    background-color: #4F8C72;
+  }
+  
+  input[type="range"]:active::-webkit-slider-thumb {
+    box-shadow: 0px 0px 1px rgba(87, 158, 129, 0.85);
+  }
+
+.rangevalue {
+    text-align: center;
+    font-family: 'Quantico', sans-serif;
+    font-size: 18px;
+    display: block;
+    margin: auto;
+    padding: 10px 0px;
+    width: 100%;
+    color: var(--darkgreen);
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Body Measurements (cm)</h1>
+        <div class="form-container">
+            <form id="measurementForm" action="/" method="post">
+                <div class="form-table">
+                    {% for i in range(num_values) %}
+                        <div class="form-row">
+                            <div class="labs">
+                                <label for="value_{{ i }}">{{ labels[i] }}</label>
+                            </div>
+                            <div class="slider">
+                                <input type="range" id="value_{{ i }}" name="value_{{ i }}" min="{{ min_values[i] }}" value="{{ mid_values[i] }}" max="{{ max_values[i] }}" step="0.1" oninput="updateValue('value_{{ i }}', 'value_display_{{ i }}')">
+                                <span id="value_display_{{ i }}" class="rangevalue"> {{ mid_values[i] }} </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        
+        {% if selected_values %}
+            <h2>Predictions</h2>
+            <div id='pred'>
+                <p>Gender: <span style="color: #43704f;">{{ gender }}</span></p>
+                <p>Height: <span style="color: #43704f;">{{ height }} cm</span></p>
+                <p>Weight: <span style="color: #43704f;">{{ weight }} kg</span></p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function updateValue(sliderId, valueId) {
+            var slider = document.getElementById(sliderId);
+            var valueDisplay = document.getElementById(valueId);
+            valueDisplay.textContent = slider.value;
+        }
+        document.getElementById('measurementForm').addEventListener('submit', function(event) {
+            {% for i in range(num_values) %}
+                var sliderValue = document.getElementById('value_{{ i }}').value;
+                localStorage.setItem('slider_{{ i }}', sliderValue);
+            {% endfor %}
+        });
+        window.addEventListener('load', function() {
+            {% for i in range(num_values) %}
+                var storedValue = localStorage.getItem('slider_{{ i }}');
+                if (storedValue !== null) {
+                    document.getElementById('value_{{ i }}').value = storedValue;
+                    updateValue('value_{{ i }}', 'value_display_{{ i }}');
+                }
+            {% endfor %}
+        });
+    </script>
+</body>
+</html>
