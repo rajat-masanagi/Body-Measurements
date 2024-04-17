@@ -52,4 +52,7 @@ def index():
         return render_template('index.html', num_values=len(min_values), min_values=min_values, max_values=max_values, selected_values=selected_values, gender=gender, height=height, weight=weight, labels=labels,mid_values=mid_values)
     else:
         return render_template('index.html', num_values=len(min_values), min_values=min_values, max_values=max_values, labels=labels,mid_values=mid_values)
+    
+if __name__ == '__main__':
+    app.run(debug=True)
 
