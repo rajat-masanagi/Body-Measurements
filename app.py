@@ -8,7 +8,7 @@ warnings.filterwarnings("ignore", message="X does not have valid feature names, 
 app = Flask(__name__)
 
 min_values = [32.4, 18.7, 24.7, 14.3, 22.2, 9.9, 8.1, 15.7, 9.9, 85.9, 72.6, 57.9, 64.0, 78.8, 46.3, 22.4, 19.6, 29.0, 28.4, 16.4, 13.0]
-max_values = [47.4, 34.7, 38.0, 27.5, 35.6, 16.7, 13.3, 24.3, 17.2, 134.8, 118.7, 113.2, 121.1, 128.3, 75.7, 42.4, 32.5, 49.0, 47.7, 29.3, 19.6]
+max_values = [47.4, 34.7, 38.0, 27.5, 35.66, 16.7, 13.3, 24.3, 17.2, 134.8, 118.7, 113.2, 121.1, 128.3, 75.7, 42.4, 32.5, 49.0, 47.7, 29.3, 19.6]
 mid_values = [round((min_val + max_val) / 2, 1) for min_val, max_val in zip(min_values, max_values)]
 labels=['Biacromial diameter','Biiliac diameter (pelvic breadth)','Bitrochanteric diameter','Chest depth','Chest diameter','Elbow diameter','Wrist diameter',
         'Knee diameter','Ankle diameter','Shoulder girth','Chest girth','Waist girth','Navel (abdominal) girth','Hip girth','Thigh girth','Bicep girth','Forearm girth',
@@ -53,5 +53,3 @@ def index():
     else:
         return render_template('index.html', num_values=len(min_values), min_values=min_values, max_values=max_values, labels=labels,mid_values=mid_values)
 
-if __name__ == '__main__':
-    app.run(debug=True)
